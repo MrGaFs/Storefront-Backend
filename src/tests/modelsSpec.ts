@@ -1,6 +1,6 @@
 import { Cart } from '../models/carts';
 import { Order } from '../models/orders';
-import Product, { product } from '../models/products';
+import Product from '../models/products';
 import { Users } from '../models/users';
 describe('Testing Models', (): void => {
 
