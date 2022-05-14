@@ -1,0 +1,24 @@
+{
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "docker_postgres",
+			"database": "store_front",
+			"username": "mrgafs",
+			"password": "03250325"
+		},
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "test",
+			"database": "store_front_test",
+			"username": "mrgafs",
+			"password": "03250325"
+		}
+	]
+}
