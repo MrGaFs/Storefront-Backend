@@ -34,6 +34,20 @@ class Product {
 		}
 	}
 
+	public async get_by_category(category:string):Promise<product|{}>{
+		try {
+			const conn = await db.connect();
+			const sql = `SELECT * FROM products WHERE category = '${category}';`;
+			const result = await conn.query(sql);
+			conn.release();
+			const ret = result.rows;
+			return ret ? ret : {};
+		} catch (err) {
+			throw new Error(`Cannot show the item ${err}`);
+		}
+
+	}
+
 	public async add(p: product): Promise<product | {}> {
 		try {
 			const conn = await db.connect();

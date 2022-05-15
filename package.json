@@ -15,6 +15,7 @@
     "rollback": "db-migrate down"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "db-migrate": "^0.11.13",
     "db-migrate-pg": "^1.2.2",
@@ -26,8 +27,11 @@
     "yarn": "^1.22.18"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.9",
     "@types/jasmine": "^4.0.3",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/pg": "^8.6.5",
     "@types/pg-pool": "^2.0.3",
     "jasmine": "^4.1.0",

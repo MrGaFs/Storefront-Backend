@@ -7,6 +7,7 @@ CREATE TABLE products (
 
 CREATE TABLE users(
 	id serial PRIMARY KEY,
+	user_name varchar(254) NOT NULL UNIQUE,
 	first_name varchar(255) NOT NULL,
 	second_name varchar(255) NOT NULL,
 	password varchar(255) NOT NULL

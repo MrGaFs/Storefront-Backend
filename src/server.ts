@@ -1,15 +1,22 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
+import productsRoute from './handlers/products';
+import usersRoute from './handlers/users';
 
 const app: express.Application = express()
-const address: string = "0.0.0.0:3000"
+const port = 3000;
+
 
 app.use(bodyParser.json())
 
 app.get('/', function (req: Request, res: Response) {
-    res.send('Hello World!')
+    res.send('<h1>The is the Store Front api main page</h1>')
 })
 
+// Routes
+productsRoute(app);
+usersRoute(app);
+
 app.listen(3000, function () {
-    console.log(`starting app on: ${address}`)
+    console.log(`starting app on port: ${port}`)
 })

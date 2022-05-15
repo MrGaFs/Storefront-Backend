@@ -50,54 +50,61 @@ describe('Testing Models', (): void => {
 	describe('Testing Users model', (): void => {
 		const usr = new Users();
 		const items=[
-			{ id: 1, first_name: 'George', second_name:'Azmy', password:'testpassword1'},
-			{ id: 2, first_name: 'Udacity', second_name:'FWD', password:'testpassword2'},
+			{ id: 1, user_name:'mrgafs' ,first_name: 'George', second_name:'Azmy', password:'testpassword1'},
+			{ id: 2, user_name:'udacity',first_name: 'Udacity', second_name:'FWD', password:'testpassword2'},
+		]
+		const sItems=[
+			{ id: 1,user_name:'mrgafs' ,first_name: 'George', second_name:'Azmy'},
+			{ id: 2,user_name:'udacity' ,first_name: 'Udacity', second_name:'FWD'},
 		]
 		
 		it('test listing with no item', async (): Promise<void> => {
-			let result = await usr.show(1);
+			let result = await usr.show_by_id(1);
 			expect(result).toEqual({});
 		});
 
 		it('Creating record 1st', async (): Promise<void> => {
 			const result = await usr.add(items[0]);
-			expect(result).toEqual(items[0]);
+			expect(result).toEqual(sItems[0]);
 		});
 
 		it('Creating record 2nd', async (): Promise<void> => {
 			const result = await usr.add(items[1]);
-			expect(result).toEqual(items[1]);
+			expect(result).toEqual(sItems[1]);
 		});
 
 		it('listing record', async (): Promise<void> => {
-			let result = await usr.show(1);
-			expect(result).toEqual(items[0]);
+			let result = await usr.show_by_id(1);
+			expect(result).toEqual(sItems[0]);
 		});
 		it('Testing Listing all records', async()=>{
 			const result = await usr.index();
-			expect(result).toEqual(items);
+			expect(result).toEqual(sItems);
 		});
 
 		it('Deleting a record from database', async()=>{
 			const result = await usr.delete(1);
-			expect(result).toEqual(items[0]);
+			expect(result).toEqual(sItems[0]);
 		})
 
 		it('Updating a record in database', async()=>{
 			const result = await usr.update(2, 'second_name', 'Hello');
-			items[1].second_name = 'Hello';
-			expect(result).toEqual(items[1]);
+			sItems[1].second_name = 'Hello';
+			expect(result).toEqual(sItems[1]);
 		})
-		afterAll(()=>{
+		afterAll(async()=>{
 			const usr = new Users();
-			for(let i = 0 ; i < 5 ; ++ i)
-				usr.add({
+			const calls = [];
+			for(let i = 0 ; i < 5 ; ++ i){
+				calls.push(usr.add({
 					id:i,
+					user_name:`testuser${i}`,
 					first_name:`testname${i}`,
 					second_name:`testsecond${i}`,
 					password:`testpassword${i}`
-				})
-
+				}))
+			}
+			await Promise.all(calls);
 		})
 	});
 
