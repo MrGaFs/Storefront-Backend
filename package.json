@@ -12,7 +12,9 @@
     "jasmine": "jasmine",
     "test": "ENV=test db-migrate --env test up ; ENV=test yarn build ; ENV=test yarn jasmine ; db-migrate --env test down ",
     "migrate": "db-migrate up",
-    "rollback": "db-migrate down"
+    "rollback": "db-migrate down",
+    "prettier": "prettier --write 'src/**/*.ts'",
+    "lint": "eslint --fix 'src/**/*.ts'"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -35,10 +37,16 @@
     "@types/pg": "^8.6.5",
     "@types/pg-pool": "^2.0.3",
     "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.26.0",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "jasmine": "^4.1.0",
     "jasmine-spec-reporter": "^7.0.0",
     "jasmine-ts": "^0.4.0",
     "pg-client": "^0.0.5",
+    "prettier": "^2.6.2",
     "supertest": "^6.2.3",
     "ts-node": "^9.1.1",
     "tsc-watch": "^4.2.9",
