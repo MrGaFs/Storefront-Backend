@@ -1,57 +1,108 @@
-# Storefront Backend Project
+# Udacity StoreFront Backend
 
-## Getting Started
+This is the backend for the Udacity StoreFront application.
 
-This repo contains a basic Node and Express app to get you started in constructing an API. To get started, clone this repo and run `yarn` in your terminal at the project root.
+The database schema and the api endpoints are described in the [REQUERMENTS.md](REQUIREMENTS.md) file.
 
-## Required Technologies
+## Running instructions
 
-Your application must make use of the following libraries:
+### Installing dependencies
 
-- Postgres for the database
-- Node/Express for the application logic
-- dotenv from npm for managing environment variables
-- db-migrate from npm for migrations
-- jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
+To run the backend, you will need to install the dependencies:
 
-## Steps to Completion
+to install dependencies:
 
-### 1. Plan to Meet Requirements
+```bash
+yarn 
+```
 
-In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API. 
+### setting up the database
 
-Your first task is to read the requirements and update the document with the following:
+this project uses postgres database on docker container.
 
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.
-**Example**: A SHOW route: 'blogs/:id' [GET]
+* To run database in the docker container:
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.
-**Example**: You can format this however you like but these types of information should be provided
-Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+```bash
+docker-compose -f docker-compose.yml up
+```
 
-**NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape.
+* connect to the database:
 
-### 2.  DB Creation and Migrations
+```bash
+psql -h 127.0.0.1 postgres
+```
 
-Now that you have the structure of the databse outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder.
+* create the Project database:
 
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+```sql
+CREATE DATABASE store_front;
+```
 
-### 3. Models
+* create Testing database:
 
-Create the models for each database table. The methods in each model should map to the endpoints in `REQUIREMENTS.md`. Remember that these models should all have test suites and mocks.
+```sql
+CREATE DATABASE store_front_test;
+```
 
-### 4. Express Handlers
+* to make the database looks like the schema in the migration file:
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled.
+```bash
+yarn global add db-migrate
+db-migrate up
+```
 
-### 5. JWTs
+### Setting up env variables
 
-Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.
+you must make an `.env` file in the root of the project providing the following information.
 
-### 6. QA and `README.md`
+```env
+POSTGRES_HOST=127.0.0.1
+POSTGRES_DB=store_front
+POSTGRES_TEST_DB=store_front_test
+POSTGRES_USER=testuser
+POSTGRES_PASSWORD=testpassword
+BCRYPT_PASSWORD=testPassword
+SALT_ROUNDS=10
+JWT_SECRET=testPassword
+ROOT_USERNAME=root
+ROOT_PASSWORD=root
+ENV=dev
+```
 
-Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database.
+## Statring the backend
 
-Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+to run the backend:
+
+```bash
+yarn watch
+```
+
+### Running ports
+
+The server will start on port 3000.
+
+### EndPoints
+
+all endpoints are described in the [REQUIREMENTS.md](REQUIREMENTS.md) file.
+
+## Authentication
+
+tokens are generated using the [JWT](https://jwt.io/) library.
+
+to provide authentication to the backend you must path the token to the header of the request as:
+
+ ``` json
+ {
+ "Authorization": "Bearer <token>"
+ }
+ ```
+
+and to get your token you must use the login endpoint as described in the [REQUIREMENTS.md](REQUIREMENTS.md) file.
+
+## Testing instructions
+
+to test the backend:
+
+```bash
+yarn test
+```

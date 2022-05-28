@@ -30,6 +30,14 @@ const get_by_category = async(req:Request, res:Response)=>{
 
 }
 
+const getTopProducts = async(req:Request, res:Response) =>{
+	try{
+		res.json(await prod.getTopProducts());
+	}
+	catch(e){
+		res.status(400).json({"massage":`${e}`});
+	}
+}
 
 
 const create = async(req:Request, res:Response) => {
@@ -73,14 +81,15 @@ const update = async(req:Request, res:Response) =>{
 
 const productsRoute = (app:express.Application)=>{
 	app.get('/products', index);
+	app.get('/products/top', getTopProducts);
 	app.get('/products/:id', show);
 	app.get('/products/category/:id', get_by_category);
 	app.post('/products',jwtAuth, create);
-	app.delete('/products/:id', del);
+	app.delete('/products/:id',jwtAuth, del);
 	app.delete('/products/', (res:Response, req:Request)=>{
 		res.status(400).json({"massage":"Please provide the id"});
 	});
-	app.put('/products/:id', update);
+	app.put('/products/:id', jwtAuth, update);
 	app.put('/products/', (res:Response, req:Request)=>{
 		res.status(400).json({"massage":"Please provide the id"});
 	});

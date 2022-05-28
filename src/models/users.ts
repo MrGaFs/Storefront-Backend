@@ -1,5 +1,5 @@
 import db from "../database"
-import bcrypt, { hashSync } from 'bcrypt';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 

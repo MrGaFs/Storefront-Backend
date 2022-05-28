@@ -2,7 +2,7 @@ import db from "../database"
 
 export type product = {
 	id: Number,
-	name: string,
+	product_name: string,
 	price: Number,
 	category: string
 }
@@ -51,13 +51,13 @@ class Product {
 	public async add(p: product): Promise<product | {}> {
 		try {
 			const conn = await db.connect();
-			const sql = `INSERT INTO products (name, price, category) values($1, $2, $3) RETURNING *`;
-			const result = await conn.query(sql, [p.name, p.price, p.category]);
+			const sql = `INSERT INTO products (product_name, price, category) values($1, $2, $3) RETURNING *`;
+			const result = await conn.query(sql, [p.product_name, p.price, p.category]);
 			conn.release();
 			const ret = result.rows[0];
 			return ret ? ret : {};
 		} catch (err) {
-			throw new Error(`Cannot add the record ${err}`);
+			throw new Error(`Cannot add the Product ${err}`);
 		}
 	}
 	public async delete(id: Number): Promise<product | {}> {
@@ -70,6 +70,19 @@ class Product {
 			return ret ? ret : {};
 		} catch (err) {
 			throw new Error(`Cannot delete the record ${err}`);
+		}
+	}
+	public async getTopProducts():Promise<product[]>{
+		try {
+			const conn = await db.connect();
+			const sql = `select product_name, sum(quantity) from orders 
+			o inner join products p on p.id=o.product_id  group BY product_name 
+			 order by sum(quantity) desc limit 5;`;
+			const result = await conn.query(sql);
+			conn.release();
+			return result.rows;
+		} catch (err) {
+			throw new Error(`Cannot get the top 5 products ${err}`);
 		}
 	}
 	public async update(id: Number, property: string, value: string | number): Promise<product | {}> {

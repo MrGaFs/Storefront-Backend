@@ -20,5 +20,6 @@
 			"username": "mrgafs",
 			"password": "03250325"
 		}
-	]
+	],
+	"compile-hero.disable-compile-files-on-did-save-code": false
 }

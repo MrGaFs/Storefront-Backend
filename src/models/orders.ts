@@ -3,69 +3,61 @@ import db from "../database"
 type order = {
 	id: Number,
 	user_id: Number,
+	product_id: Number,
+	quantity: Number,
+	status: Boolean
+}
+type returnedOrder = {
+	id: Number,
+	user_name:string,
+	product_name:string,
+	quantity: Number,
+	status: Boolean
 }
 
 export class Order {
-	async index(): Promise<order[]> {
+	async getCurrentOrder(user_id: Number): Promise<returnedOrder | {}> {
 		try {
-			const conn = await db.connect();
-			const sql = `SELECT * FROM orders;`;
-			const result = await conn.query(sql);
-			conn.release();
+			const result = await db.query(`SELECT o.id, user_name, product_name, quantity, status
+			FROM orders o INNER JOIN users u ON u.id = o.user_id
+			INNER JOIN products p ON p.id = o.product_id WHERE o.user_id = ${user_id} AND o.status = 't';`);
+			return result.rows[0] == undefined?{}:result.rows[0];
+		} catch (e) {
+			throw new Error(e as string);
+		}
+	}
+	async addOrder(order: order): Promise<returnedOrder | {}> {
+		try {
+			const curOrder = await this.getCurrentOrder(order.user_id);
+			if (JSON.stringify(curOrder) !== JSON.stringify({})) 
+				this.setStatus((curOrder as returnedOrder).id, false);
+			await db.query(
+				`INSERT INTO orders (user_id, product_id, quantity, status) values($1, $2, $3, $4) `,
+				[order.user_id, order.product_id, order.quantity, order.status]);
+			const result = await this.getCurrentOrder(order.user_id);
+			return result;
+		} catch (e) {
+			throw new Error(e as string);
+		}
+	}
+	async getCompletedOrders(user_id: Number): Promise<returnedOrder[]> {
+		try {
+			const result = await db.query(`SELECT o.id, user_name, product_name, quantity, status
+			FROM orders o INNER JOIN users u ON u.id = o.user_id
+			INNER JOIN products p ON p.id = o.product_id WHERE o.user_id = ${user_id} AND o.status = 'f';`);
 			return result.rows;
-		}
-		catch (err) {
-			throw new Error(`Cannot connect to database ${err}`);
-		}
-	}
-
-	async show(id: Number): Promise<order|{}> {
-		try {
-			const conn = await db.connect();
-			const sql = `SELECT * FROM orders WHERE id =($1);`;
-			const result = await conn.query(sql, [id]);
-			conn.release();
-			const ret = result.rows[0];
-			return (ret)?ret:{};
-		} catch (err) {
-			throw new Error(`Cannot show the item ${err}`);
+		} catch (e) {
+			throw new Error(e as string);
 		}
 	}
-
-	async add(ord: order): Promise<order|{}> {
+	async setStatus(order_id: Number, status: Boolean): Promise<returnedOrder | {}> {
 		try {
-			const conn = await db.connect();
-			const sql = `INSERT INTO orders (user_id) values(${ord.user_id}) RETURNING *;`;
-			const result = await conn.query(sql);
-			conn.release();
-			const ret = result.rows[0];
-			return (ret)?ret:{};
-		} catch (err) {
-			throw new Error(`Cannot add the item ${err}`);
-		}
-	}
-	async delete(id:Number): Promise<order> {
-		try {
-			const conn = await db.connect();
-			const sql = `DELETE FROM orders where id=($1) RETURNING *;`;
-			const result = await conn.query(sql, [id]);
-			conn.release();
-			const ret = result.rows[0];
-			return (ret)?ret:{};
-		} catch (err) {
-			throw new Error(`Cannot add the item ${err}`);
-		}
-	}
-	async update(id:Number, property:string, value:number): Promise<order> {
-		try {
-			const conn = await db.connect();
-			const sql = `UPDATE orders SET ${property}=${value} WHERE id=${id} RETURNING *;`;
-			const result = await conn.query(sql);
-			conn.release();
-			const ret = result.rows[0];
-			return (ret)?ret:{};
-		} catch (err) {
-			throw new Error(`Cannot add the item ${err}`);
+			const result = await db.query(
+				`UPDATE orders SET status = ${status} WHERE id = ${order_id} RETURNING *`);
+			return result.rows[0];
+		} catch (e) {
+			throw new Error(e as string);
 		}
 	}
 }
+export default order;
