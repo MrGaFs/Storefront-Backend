@@ -7,8 +7,8 @@ describe('Testing Models', (): void => {
 	describe('Testing Products model', (): void => {
 		const prod = new Product();
 		const items=[
-			{ id: 1, name: 'testProduct 1', price: 10, category: 'testCategory 1' },
-			{ id: 2, name: 'testProduct 2', price: 10, category: 'testCategory 2' }
+			{ id: 1, product_name: 'testProduct 1', price: 10, category: 'testCategory 1' },
+			{ id: 2, product_name: 'testProduct 2', price: 10, category: 'testCategory 2' }
 		]
 		
 		it('test listing with no item', async (): Promise<void> => {
@@ -40,8 +40,8 @@ describe('Testing Models', (): void => {
 		})
 
 		it('Updating a record in database', async()=>{
-			const result = await prod.update(2, 'name', 'Updated');
-			items[1].name = 'Updated';
+			const result = await prod.update(2, 'product_name', 'Updated');
+			items[1].product_name = 'Updated';
 			expect(result).toEqual(items[1]);
 		})
 	});
@@ -94,7 +94,8 @@ describe('Testing Models', (): void => {
 		})
 		afterAll(async()=>{
 			const usr = new Users();
-			const calls = [];
+			const prod = new Product();
+			let calls = [];
 			for(let i = 0 ; i < 5 ; ++ i){
 				calls.push(usr.add({
 					id:i,
@@ -105,6 +106,17 @@ describe('Testing Models', (): void => {
 				}))
 			}
 			await Promise.all(calls);
+			calls = [];
+			for (let i = 0 ; i < 5 ; ++ i){
+				calls.push(prod.add({
+					id:i,
+					product_name:`testproduct${i}`,
+					price:i,
+					category:`testcategory${i}`
+				}))
+			}
+			await Promise.all(calls);
+
 		})
 	});
 
@@ -112,75 +124,16 @@ describe('Testing Models', (): void => {
 	describe('Testing Orders model', (): void => {
 		const ord = new Order();
 		const items=[
-			{ id: 1, user_id: 2},
-			{ id: 2, user_id: 3}
+			{ id: 1, user_id: 2, product_id: 3, quantity: 10, status: true },
+			{ id: 2, user_id: 3, product_id: 4, quantity: 4, status: false }
 		]
-		
 		it('test listing with no item', async (): Promise<void> => {
-			let result = await ord.show(1);
-			expect(result).toEqual({});
+			let result = await ord.getCurrentOrder(1);
+			expect(result).toEqual([]);
 		});
-
 		it('Creating record 1st', async (): Promise<void> => {
-			const result = await ord.add(items[0]);
+			const result = await ord.addOrder(items[0]);
 			expect(result).toEqual(items[0]);
 		});
-
-		it('Creating record 2nd', async (): Promise<void> => {
-			const result = await ord.add(items[1]);
-			expect(result).toEqual(items[1]);
-		});
-
-		it('Testing Listing all records', async()=>{
-			const result = await ord.index();
-			expect(result).toEqual(items);
-		});
-
-		it('Deleting a record from database', async()=>{
-			const result = await ord.delete(1);
-			expect(result).toEqual(items[0]);
-		})
-
-		it('Updating a record in database', async()=>{
-			const result = await ord.update(2, 'user_id', 5);
-			items[1].user_id = 5;
-			expect(result).toEqual(items[1]);
-		})
 	});
-
-	describe('Testing cart model', (): void => {
-		const cart = new Cart();
-		const items=[
-			{ id: 1, product_id: 2, quantity: 2,order_id:2},
-		]
-		
-		it('test listing with no item', async (): Promise<void> => {
-			let result = await cart.show(1);
-			expect(result).toEqual({});
-		});
-
-		it('Creating record', async (): Promise<void> => {
-			const result = await cart.add(items[0]);
-			expect(result).toEqual(items[0]);
-		});
-
-
-		it('Testing Listing all records', async()=>{
-			const result = await cart.index();
-			expect(result).toEqual(items);
-		});
-
-
-		it('Updating a record in database', async()=>{
-			const result = await cart.update(1, 'quantity', 5);
-			items[0].quantity = 5;
-			expect(result).toEqual(items[0]);
-		})
-
-		it('Deleting a record from database', async()=>{
-			const result = await cart.delete(1);
-			expect(result).toEqual(items[0]);
-		})
-	});
-
 });

@@ -5,11 +5,20 @@ import Product from '../models/products';
 const prod = new Product();
 
 const index = async(req:Request,res:Response) =>{
+	try{
 	res.json(await prod.index());
+	}
+	catch(e){
+		res.status(400).json({"massage":`${e}`});
+	}
 }
 
 const show = async(req:Request,res:Response) =>{
+	try{
 	res.json(await prod.show(parseInt(req.params.id)));
+	}catch(e){
+		res.status(400).json({"massage":`${e}`});
+	}
 }
 const get_by_category = async(req:Request, res:Response)=>{
 	try {
@@ -24,16 +33,25 @@ const get_by_category = async(req:Request, res:Response)=>{
 
 
 const create = async(req:Request, res:Response) => {
+	try{
 	const  namePar :string = req.body.name, 
 	pricePar:number = req.body.price, categoryPar:string = req.body.category;
 	if (namePar == undefined || pricePar == undefined|| categoryPar == undefined)
 		res.status(400).json({"massage":"the data is incomplete"});
 	else
-		res.json(await prod.add({ id: 1, name: namePar, price: pricePar, category: categoryPar }));
+		res.json(await prod.add({ id: 1, product_name: namePar, price: pricePar, category: categoryPar }));
+	}
+	catch(e){
+		res.status(400).json({"massage":`${e}`});
+	}
 }
 
 const del = async(req:Request, res:Response)=>{
+	try{
 		res.json(await prod.delete(parseInt(req.params.id)));
+	}catch(e){
+		res.status(400).json({"massage":`${e}`});
+	}
 }
 const update = async(req:Request, res:Response) =>{
 	if (JSON.stringify(req.body) === JSON.stringify({})){ 
