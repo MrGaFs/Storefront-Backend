@@ -18,18 +18,24 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ### Users endpoint
 
-- [ADDED] Login (to Get you token) `[POST] /users/login (request body[{user_name:string, password:string}])`
+- [ADDED] Login (to Get you token) `[POST] /users/login (request body[{user_name:string, password:string}]) => return token`
 - Index [token required] `[GET] /users`
 - Show [token required] `[GET] /users/:id`
-- Create N[token required] `[POST] /users (request body[{user_name:string,first_name:string, second_name:string, password:string}])`
+- Create N `[POST] /users (request body[{user_name:string,first_name:string, second_name:string, password:string}])  => return token`
 - [ADDED] Delete [token required] `[DELETE] /users/:id`
 - [ADDED] Change [token required] `[put] /users/:id (request body[{property:string, value:string}])`
 
 ### Orders endpoint
 
-- Current Order by user (args: user id) [token required] `[GET] /orders/current/:id`
+- Current Order by user (args: user id) [token required] `[GET] /orders/:id`
 - [OPTIONAL] Completed Orders by user (args: user id) [token required] `[GET] /orders/completed/:id`
-- [ADDED] Create [token required] `[POST] /orders/:id (request body[{product_id:number, quantity:number}])`
+- [ADDED] Create New order and finish the last order [token required] `[POST] /orders/:id (request body[{product_id:number, quantity:number}])`
+
+### Cart endpoint
+
+- [ADDED] Get current cart for the user [token required] `[GET] /cart/user:id (id is user id)`
+- [ADDED] Get any cart by order id [token required] `[GET] /cart/:id`
+- [ADDED] Add product to cart [token required] `[POST] /cart/user:id (request body[{product_id:number, quantity:number}])`
 
 ## Data Shapes
 
@@ -83,7 +89,17 @@ CREATE TABLE orders (
 ```
 
 - id
-- id of each product in the order
-- quantity of each product in the order
 - user_id
 - status of order (active or complete): Boolean (True or false)
+
+### OrdersProducts
+
+```sql
+CREATE TABLE orders_products(
+ id serial PRIMARY KEY,
+ order_id INTEGER NOT NULL,
+ product_id INTEGER NOT NULL,
+ quantity INTEGER NOT NULL,
+ FOREIGN KEY (product_id) REFERENCES products(id)
+);
+```

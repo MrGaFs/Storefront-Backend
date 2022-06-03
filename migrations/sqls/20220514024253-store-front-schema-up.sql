@@ -17,9 +17,14 @@ CREATE TABLE users(
 CREATE TABLE orders (
 	id serial PRIMARY KEY,
 	user_id INTEGER NOT NULL,
+	status BOOLEAN NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE orders_products(
+	id serial PRIMARY KEY,
+	order_id INTEGER NOT NULL,
 	product_id INTEGER NOT NULL,
 	quantity INTEGER NOT NULL,
-	status BOOLEAN NOT NULL,
-	FOREIGN KEY (user_id) REFERENCES users(id),
 	FOREIGN KEY (product_id) REFERENCES products(id)
 );

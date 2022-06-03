@@ -1,4 +1,4 @@
-import express, { Response, Request} from 'express';
+import express, { Response, Request } from 'express';
 import jwtAuth from '../middleWares/jwtAuth';
 import Product from '../models/products';
 

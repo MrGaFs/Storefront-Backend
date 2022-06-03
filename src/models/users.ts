@@ -28,7 +28,8 @@ export class Users {
 	async index(): Promise<s_user_info[]> {
 		try {
 			const conn = await db.connect();
-			const sql = 'SELECT id, user_name, first_name, second_name FROM users;';
+			const sql =
+				'SELECT id, user_name, first_name, second_name FROM users;';
 			const result = await conn.query(sql);
 			conn.release();
 			return result.rows;
@@ -40,7 +41,8 @@ export class Users {
 	async show_by_id(id: number): Promise<s_user_info | unknown> {
 		try {
 			const conn = await db.connect();
-			const sql = 'SELECT id, user_name, first_name, second_name FROM users WHERE id =($1);';
+			const sql =
+				'SELECT id, user_name, first_name, second_name FROM users WHERE id =($1);';
 			const result = await conn.query(sql, [id]);
 			conn.release();
 			const ret = result.rows[0];
@@ -52,7 +54,8 @@ export class Users {
 	async show_by_user_name(user_name: string): Promise<s_user_info | unknown> {
 		try {
 			const conn = await db.connect();
-			const sql = 'SELECT id, user_name, first_name, second_name FROM users WHERE user_name=($1);';
+			const sql =
+				'SELECT id, user_name, first_name, second_name FROM users WHERE user_name=($1);';
 			const result = await conn.query(sql, [user_name]);
 			conn.release();
 			const ret = result.rows[0];
@@ -98,7 +101,8 @@ export class Users {
 	async auth(user_name: string, password: string): Promise<string | unknown> {
 		try {
 			const conn = await db.connect();
-			const sql = 'SELECT id, user_name, first_name, second_name, password FROM users WHERE user_name=($1);';
+			const sql =
+				'SELECT id, user_name, first_name, second_name, password FROM users WHERE user_name=($1);';
 			const result = await conn.query(sql, [user_name]);
 			conn.release();
 			const ret = result.rows[0];

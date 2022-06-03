@@ -1,4 +1,4 @@
-import express, { Response, Request} from 'express';
+import express, { Response, Request } from 'express';
 import { Users } from '../models/users';
 import dotenv from 'dotenv';
 import jwtAuth from '../middleWares/jwtAuth';
@@ -31,18 +31,18 @@ const create = async (req: Request, res: Response) => {
 			password == undefined
 		)
 			res.status(400).json({ massage: 'the data is incomplete' });
-		else
-			res.json(
-				await usr.add({
-					id: 1,
-					user_name: userName,
-					first_name: firstName,
-					second_name: secondName,
-					password: password,
-				})
-			);
+		else {
+			await usr.add({
+				id: 1,
+				user_name: userName,
+				first_name: firstName,
+				second_name: secondName,
+				password: password,
+			});
+			res.json({'jwt token':await usr.auth(userName, password)});
+		}
 	} catch (err) {
-		res.json(`"Error":"${err}"`);
+		res.json({ 'Error': `${err}` });
 	}
 };
 
@@ -55,7 +55,7 @@ const login = async (req: Request, res: Response) => {
 		return;
 	}
 	try {
-		res.json(await usr.auth(userName, password));
+		res.json({'jwt token':await usr.auth(userName, password)});
 	} catch (err) {
 		res.status(400).json({ Error: `${err}` });
 	}
@@ -86,7 +86,7 @@ const update = async (req: Request, res: Response) => {
 const usersRoute = (app: express.Application) => {
 	app.get('/users', jwtAuth, index);
 	app.get('/users/:id', jwtAuth, show);
-	app.post('/users', jwtAuth, create);
+	app.post('/users', create);
 	app.post('/users/login', login);
 	app.delete('/users/:id', jwtAuth, del);
 	app.delete('/users/', jwtAuth, (_req: Request, res: Response) => {

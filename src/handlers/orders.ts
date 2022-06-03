@@ -1,4 +1,4 @@
-import express, { Response, Request} from 'express';
+import express, { Response, Request } from 'express';
 import jwtAuth from '../middleWares/jwtAuth';
 import { Order } from '../models/orders';
 
@@ -22,16 +22,11 @@ const getFinishedOrders = async (req: Request, res: Response) => {
 		res.json({ Error: `${e}` });
 	}
 };
-const addOrder = async (req: Request, res: Response) => {
+const newOrder = async (req: Request, res: Response) => {
 	try {
-		const { product_id, quantity } = req.body;
-		if (product_id == undefined || quantity == undefined)
-			res.status(400).json({ massage: 'the data is incomplete' });
-		const result = await ord.addOrder({
+		const result = await ord.newOrder({
 			id: 1,
 			user_id: parseInt(req.params.id),
-			product_id: product_id,
-			quantity: quantity,
 			status: true,
 		});
 		res.json(result);
@@ -43,6 +38,6 @@ const addOrder = async (req: Request, res: Response) => {
 const ordersRoute = (app: express.Application) => {
 	app.get('/orders/:id', jwtAuth, getCurrentOrder);
 	app.get('/orders/Completed/:id', jwtAuth, getFinishedOrders);
-	app.post('/orders/:id', jwtAuth, addOrder);
+	app.post('/orders/:id', jwtAuth, newOrder);
 };
 export default ordersRoute;

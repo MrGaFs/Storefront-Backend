@@ -49,7 +49,8 @@ class Product {
 	public async add(p: product): Promise<product | unknown> {
 		try {
 			const conn = await db.connect();
-			const sql = 'INSERT INTO products (product_name, price, category) values($1, $2, $3) RETURNING *';
+			const sql =
+				'INSERT INTO products (product_name, price, category) values($1, $2, $3) RETURNING *';
 			const result = await conn.query(sql, [
 				p.product_name,
 				p.price,
