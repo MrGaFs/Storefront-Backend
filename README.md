@@ -18,7 +18,7 @@ yarn
 
 ### setting up the database
 
-this project uses postgres database on docker container.
+this project uses postgres database on docker container that runs on port 5432.
 
 * To run database in the docker container:
 
