@@ -82,7 +82,11 @@ const update = async (req: Request, res: Response) => {
 			Error: 'probery provided is not exist or value don\'t match the required',
 		});
 	}
-	res.json(await prod.show(id));
+	try{
+		res.json(await prod.show(id));
+	}catch(e){
+		res.status(400).json({ massage: `${e}` });
+	}
 };
 
 const productsRoute = (app: express.Application) => {

@@ -8,13 +8,21 @@ const usr = new Users();
 dotenv.config();
 
 const index = async (_req: Request, res: Response) => {
-	res.json(await usr.index());
+	try{
+		res.json(await usr.index());
+	}catch(e){
+		res.status(400).json({Error:e});
+	}
 };
 
 const show = async (req: Request, res: Response) => {
-	if (isNaN(parseInt(req.params.id)))
-		res.json(await usr.show_by_user_name(req.params.id));
-	else res.json(await usr.show_by_id(parseInt(req.params.id)));
+	try{
+		if (isNaN(parseInt(req.params.id)))
+			res.json(await usr.show_by_user_name(req.params.id));
+		else res.json(await usr.show_by_id(parseInt(req.params.id)));
+	} catch (e) {
+		res.status(400).json({ Error: e });
+	}
 };
 
 const create = async (req: Request, res: Response) => {
@@ -62,7 +70,11 @@ const login = async (req: Request, res: Response) => {
 };
 
 const del = async (req: Request, res: Response) => {
-	res.json(await usr.delete(parseInt(req.params.id)));
+	try{
+		res.json(await usr.delete(parseInt(req.params.id)));
+	}catch(e){
+		res.status(400).json({Error:e});
+	}
 };
 
 const update = async (req: Request, res: Response) => {
@@ -80,7 +92,11 @@ const update = async (req: Request, res: Response) => {
 			Error: 'probery provided is not exist or value don\'t match the required',
 		});
 	}
-	res.json(await usr.show_by_id(id));
+	try{
+		res.json(await usr.show_by_id(id));
+	}catch(e){
+		res.status(400).json({Error:e});
+	}
 };
 
 const usersRoute = (app: express.Application) => {
