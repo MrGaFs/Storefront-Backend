@@ -1,5 +1,4 @@
 import { Order } from '../models/orders';
-import dotenv from 'dotenv';
 import Product from '../models/products';
 import { Users } from '../models/users';
 import OrdersProducts from '../models/ordersProducts';
@@ -56,20 +55,18 @@ describe('Testing Models', (): void => {
 		});
 	});
 
-	dotenv.config();
-
 	describe('Testing Users model', (): void => {
 		const usr = new Users();
 		const items = [
 			{
-				id: 2,
+				id: 1,
 				user_name: 'mrgafs',
 				first_name: 'George',
 				second_name: 'Azmy',
 				password: 'testpassword1',
 			},
 			{
-				id: 3,
+				id: 2,
 				user_name: 'udacity',
 				first_name: 'Udacity',
 				second_name: 'FWD',
@@ -79,18 +76,12 @@ describe('Testing Models', (): void => {
 		const sItems = [
 			{
 				id: 1,
-				user_name: process.env.ROOT_USERNAME,
-				first_name: 'admin',
-				second_name: 'admin',
-			},
-			{
-				id: 2,
 				user_name: 'mrgafs',
 				first_name: 'George',
 				second_name: 'Azmy',
 			},
 			{
-				id: 3,
+				id: 2,
 				user_name: 'udacity',
 				first_name: 'Udacity',
 				second_name: 'FWD',
@@ -98,18 +89,18 @@ describe('Testing Models', (): void => {
 		];
 
 		it('test listing with no item', async (): Promise<void> => {
-			const result = await usr.show_by_id(2);
+			const result = await usr.show_by_id(1);
 			expect(result).toEqual({});
 		});
 
 		it('Creating record 1st', async (): Promise<void> => {
 			const result = await usr.add(items[0]);
-			expect(result).toEqual(sItems[1]);
+			expect(result).toEqual(sItems[0]);
 		});
 
 		it('Creating record 2nd', async (): Promise<void> => {
 			const result = await usr.add(items[1]);
-			expect(result).toEqual(sItems[2]);
+			expect(result).toEqual(sItems[1]);
 		});
 
 		it('listing record', async (): Promise<void> => {
@@ -122,14 +113,14 @@ describe('Testing Models', (): void => {
 		});
 
 		it('Deleting a record from database', async () => {
-			const result = await usr.delete(2);
-			expect(result).toEqual(sItems[1]);
+			const result = await usr.delete(1);
+			expect(result).toEqual(sItems[0]);
 		});
 
 		it('Updating a record in database', async () => {
-			const result = await usr.update(3, 'second_name', 'Hello');
-			sItems[2].second_name = 'Hello';
-			expect(result).toEqual(sItems[2]);
+			const result = await usr.update(2, 'second_name', 'Hello');
+			sItems[1].second_name = 'Hello';
+			expect(result).toEqual(sItems[1]);
 		});
 		afterAll(async () => {
 			const usr = new Users();
@@ -165,8 +156,8 @@ describe('Testing Models', (): void => {
 	describe('Testing Orders model', (): void => {
 		const ord = new Order();
 		const items = [
-			{ id: 1, user_id: 3, status: true },
-			{ id: 2, user_id: 3, status: true },
+			{ id: 1, user_id: 2, status: true },
+			{ id: 2, user_id: 2, status: true },
 		];
 		it('test listing with no item', async (): Promise<void> => {
 			const result = await ord.getCurrentOrder(2);
@@ -176,7 +167,7 @@ describe('Testing Models', (): void => {
 			const result = await ord.newOrder(items[0]);
 			expect(result).toEqual({
 				id: 1,
-				user_id: 3,
+				user_id: 2,
 				status: true,
 			});
 		});
@@ -185,16 +176,16 @@ describe('Testing Models', (): void => {
 			const result = await ord.newOrder(items[1]);
 			expect(result).toEqual({
 				id: 2,
-				user_id: 3,
+				user_id: 2,
 				status: true,
 			});
 		});
 		it('Checking The completed orders', async (): Promise<void> => {
-			const result = await ord.getCompletedOrders(3);
+			const result = await ord.getCompletedOrders(2);
 			expect(result).toEqual([
 				{
 					id: 1,
-					user_id: 3,
+					user_id: 2,
 					status: false,
 				},
 			]);
@@ -204,17 +195,17 @@ describe('Testing Models', (): void => {
 	describe('Testing OrdersProducts model', (): void => {
 		const ordProd = new OrdersProducts();
 		it('Testing No Item List', async () => {
-			const result = await ordProd.getCurrentCart(3);
+			const result = await ordProd.getCurrentCart(2);
 			expect(result).toEqual({
 				id: 2,
-				user_id: 3,
+				user_id: 2,
 				status: true,
 				products: []
 			});
 		});
 
 		it('Testing Adding Items first', async () => {
-			const result = await ordProd.addProduct(3, 2, 5);
+			const result = await ordProd.addProduct(2, 2, 5);
 			expect(result).toEqual({
 				id: 1,
 				order_id: 2,
@@ -224,7 +215,7 @@ describe('Testing Models', (): void => {
 		});
 
 		it('Testing Adding Items second', async () => {
-			const result = await ordProd.addProduct(3, 3, 5);
+			const result = await ordProd.addProduct(2, 3, 5);
 			expect(result).toEqual({
 				id: 2,
 				order_id: 2,
@@ -234,9 +225,9 @@ describe('Testing Models', (): void => {
 		});
 
 		it('Testing Getting current items list', async () => {
-			expect(await ordProd.getCurrentCart(3)).toEqual({
+			expect(await ordProd.getCurrentCart(2)).toEqual({
 				id: 2,
-				user_id: 3,
+				user_id: 2,
 				status: true,
 				products: [
 					{ id: 2, product_name: 'Updated', quantity: 5 },
@@ -248,7 +239,7 @@ describe('Testing Models', (): void => {
 		it('Testing Getting old items list', async () => {
 			expect(await ordProd.getCart(1)).toEqual({
 				id: 1,
-				user_id: 3,
+				user_id: 2,
 				status: false,
 				products: [
 				],

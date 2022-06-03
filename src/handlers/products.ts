@@ -37,7 +37,7 @@ const getTopProducts = async (_req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
 	try {
-		const namePar: string = req.body.name,
+		const namePar: string = req.body.product_name,
 			pricePar: number = req.body.price,
 			categoryPar: string = req.body.category;
 		if (

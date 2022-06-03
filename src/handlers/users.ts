@@ -39,7 +39,7 @@ const create = async (req: Request, res: Response) => {
 				second_name: secondName,
 				password: password,
 			});
-			res.json({'jwt token':await usr.auth(userName, password)});
+			res.json({'token':await usr.auth(userName, password)});
 		}
 	} catch (err) {
 		res.json({ 'Error': `${err}` });
@@ -55,7 +55,7 @@ const login = async (req: Request, res: Response) => {
 		return;
 	}
 	try {
-		res.json({'jwt token':await usr.auth(userName, password)});
+		res.json({'token':await usr.auth(userName, password)});
 	} catch (err) {
 		res.status(400).json({ Error: `${err}` });
 	}

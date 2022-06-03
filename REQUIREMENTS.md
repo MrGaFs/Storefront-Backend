@@ -14,7 +14,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - [OPTIONAL] Top 5 most popular products `[GET] /products/top`
 - [OPTIONAL] Products by category (args: product category) `[GET] /products/category/:category`
 - [ADDED] Delete [token required] `[DELETE] /products/:id`
-- [ADDED] Change [token required] `[put] /products/:id (request body[{property:string, value:string|number}])`
+- [ADDED] Change [token required] `[put] /products/:id (request body[{property:value}])`
 
 ### Users endpoint
 
@@ -23,19 +23,19 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Show [token required] `[GET] /users/:id`
 - Create N `[POST] /users (request body[{user_name:string,first_name:string, second_name:string, password:string}])  => return token`
 - [ADDED] Delete [token required] `[DELETE] /users/:id`
-- [ADDED] Change [token required] `[put] /users/:id (request body[{property:string, value:string}])`
+- [ADDED] Change [token required] `[PUT] /users/:id (request body[{property:string, value:string}])`
 
 ### Orders endpoint
 
 - Current Order by user (args: user id) [token required] `[GET] /orders/:id`
 - [OPTIONAL] Completed Orders by user (args: user id) [token required] `[GET] /orders/completed/:id`
-- [ADDED] Create New order and finish the last order [token required] `[POST] /orders/:id (request body[{product_id:number, quantity:number}])`
+- [ADDED] Create New order and finish the last order [token required] `[POST] /orders/:id`
 
 ### Cart endpoint
 
-- [ADDED] Get current cart for the user [token required] `[GET] /cart/user:id (id is user id)`
+- [ADDED] Get current cart for the user [token required] `[GET] /cart/user/:id (id is user id)`
 - [ADDED] Get any cart by order id [token required] `[GET] /cart/:id`
-- [ADDED] Add product to cart [token required] `[POST] /cart/user:id (request body[{product_id:number, quantity:number}])`
+- [ADDED] Add product to cart [token required] `[POST] /cart/user/:id (request body[{product_id:number, quantity:number}])`
 
 ## Data Shapes
 
@@ -89,7 +89,7 @@ CREATE TABLE orders (
 ```
 
 - id
-- user_id
+- user_id (user.id)
 - status of order (active or complete): Boolean (True or false)
 
 ### OrdersProducts
@@ -103,3 +103,8 @@ CREATE TABLE orders_products(
  FOREIGN KEY (product_id) REFERENCES products(id)
 );
 ```
+
+- id
+- order_id (order.id)
+- product_id (product.id)
+- quantity

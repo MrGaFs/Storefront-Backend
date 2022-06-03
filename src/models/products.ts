@@ -78,7 +78,7 @@ class Product {
 	public async getTopProducts(): Promise<product[]> {
 		try {
 			const conn = await db.connect();
-			const sql = `select product_name, sum(quantity) from orders 
+			const sql = `select product_name, sum(quantity) from orders_products 
 			o inner join products p on p.id=o.product_id  group BY product_name 
 			 order by sum(quantity) desc limit 5;`;
 			const result = await conn.query(sql);
